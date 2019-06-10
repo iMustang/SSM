@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/context
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/aop
+                           http://www.springframework.org/schema/aop/spring-aop.xsd
+                           http://www.springframework.org/schema/tx
+                           http://www.springframework.org/schema/tx/spring-tx.xsd
+                           http://www.springframework.org/schema/cache
+                           http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <!-- 自动扫描，但不扫描Controller注解 -->
+    <context:component-scan base-package="com.xmustang">
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 数据源 -->
+    <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+          destroy-method="close">
+        <property name="driverClass">
+            <value>${dataSource.driverClass}</value>
+        </property>
+        <property name="jdbcUrl">
+            <value>${dataSource.jdbcUrl}</value>
+        </property>
+        <property name="user">
+            <value>${dataSource.user}</value>
+        </property>
+        <property name="password">
+            <value>${dataSource.password}</value>
+        </property>
+        <property name="acquireIncrement">
+            <value>${dataSource.acquireIncrement}</value>
+        </property>
+        <property name="initialPoolSize">
+            <value>${dataSource.initialPoolSize}</value>
+        </property>
+        <property name="maxPoolSize">
+            <value>${dataSource.maxPoolSize}</value>
+        </property>
+        <property name="minPoolSize">
+            <value>${dataSource.minPoolSize}</value>
+        </property>
+    </bean>
+    <bean id="mybatisSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="addToConfig" value="true"/>
+        <property name="basePackage" value="com.xmustang.ssm.**.mapper"/>
+        <property name="sqlSessionFactoryBeanName" value="mybatisSessionFactory"/>
+    </bean>
+
+    <!-- 开启自动代理，使用AOP-->
+    <aop:aspectj-autoproxy/>
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <aop:config>
+        <aop:pointcut id="appService" expression="execution(* com.xmustang.ssm.*.service..*Service*.*(..))"/>
+        <aop:advisor advice-ref="txAdvice" pointcut-ref="appService"/>
+    </aop:config>
+
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="select*" read-only="true"/>
+            <tx:method name="find*" read-only="true"/>
+            <tx:method name="get*" read-only="true"/>
+            <tx:method name="*"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <bean class="com.xmustang.ssm.config.SsmConfig"/>
+
+    <!-- *.properties配置文件加载 -->
+    <context:property-placeholder location="classpath:c3p0.properties"/>
+    <bean id="prop" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="locations">
+            <list>
+                <value>classpath:application.properties</value>
+            </list>
+        </property>
+    </bean>
+</beans>
