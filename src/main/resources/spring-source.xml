@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!-- 给研究Spring源码使用的xml，与ssm框架demo无关 -->
+   <!-- <bean name="a1,a2" class="com.xmustang.ssm.source.Hello"></bean>
+    <bean id="hello1" class="com.xmustang.ssm.source.Hello"></bean>-->
+    <bean class="com.xmustang.ssm.source.Hello"></bean>
+</beans>
