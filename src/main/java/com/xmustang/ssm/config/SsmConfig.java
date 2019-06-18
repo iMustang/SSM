@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableCaching
 public class SsmConfig {
 	@Bean
-	public CacheManager cacheManager1(){
+	public CacheManager cacheManager(){
 		return new ConcurrentMapCacheManager("cacheDemo");
 	}
 

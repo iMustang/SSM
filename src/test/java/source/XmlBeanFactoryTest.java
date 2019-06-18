@@ -11,7 +11,6 @@ import org.springframework.core.io.ClassPathResource;
  * @Version: 1.0
  * @create: 2019/6/11 17:49
  */
-
 public class XmlBeanFactoryTest {
     @Test
     public void testXmlBean() {
