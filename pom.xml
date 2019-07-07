@@ -8,8 +8,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <properties>
-        <spring.version.source>3.2.18.RELEASE</spring.version.source>
-        <spring.version.ssm>5.1.7.RELEASE</spring.version.ssm>
+        <spring.version>5.1.7.RELEASE</spring.version>
     </properties>
     <dependencies>
         <dependency>
@@ -102,7 +101,7 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-framework-bom</artifactId>
-                <version>${spring.version.source}</version>
+                <version>${spring.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
